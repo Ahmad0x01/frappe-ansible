@@ -1,0 +1,15 @@
+---
+# defaults file for role
+nodejs_version: "18.20.4-1nodesource1"
+nodejs_force_install: false
+nodejs_uses_debian_repository: false
+nodejs_npm: {yarn}
+nodejs_npm_default:
+  ignore_scripts: false
+  production: false
+  registry: "{{ omit }}"
+  unsafe_perm: false
+  version: "{{ omit }}"
+  state: present
+nodejs_proxy_settings_http_proxy: ''
+nodejs_proxy_settings_https_proxy: ''

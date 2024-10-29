@@ -1,0 +1,12 @@
+Log created: 2024-10-28T14:04:14.950838000Z
+Process ID:  103207 (0x19327)
+Parent PID:  1894 (0x766)
+Executable:  /usr/lib/virtualbox/VBoxHeadless
+Arg[0]: /usr/lib/virtualbox/VBoxHeadless
+Arg[1]: --comment
+Arg[2]: frappe-ansible_default_1729778288841_34020
+Arg[3]: --startvm
+Arg[4]: e97373c5-8b9a-45b3-9f54-d9b44ad4839c
+Arg[5]: --vrde
+Arg[6]: config
+AddRef: illegal refcnt=3221225469 state=2

@@ -1,0 +1,35 @@
+---
+- name: Become mashedbytes user
+  hosts: all
+  become: true
+  # become_user: mashedbytes
+
+  vars:
+    frappe_branch: "version-15"
+    site_name: "mashedbytes.localhost"
+    ansible_roles_path: "/home/ahmad/frappe-ansible/roles:/etc/ansible/roles"
+
+  tasks:
+    - name: Debug
+      ansible.builtin.debug:
+        msg: "HOME: {{ ansible_env.HOME }}, USER: {{ ansible_env.USER }}"
+
+    - name: Include common role
+      ansible.builtin.include_role:
+        name: common
+
+    - name: Include claranet.mariadb role
+      ansible.builtin.include_role:
+        name: claranet.mariadb
+
+    - name: Include claranet.nodejs role
+      ansible.builtin.include_role:
+        name: claranet.nodejs
+
+    - name: Include wkhtmltopdf role
+      ansible.builtin.include_role:
+        name: wkhtmltopdf
+
+    - name: Include frappe-bench role
+      ansible.builtin.include_role:
+        name: frappe-bench

@@ -1,0 +1,72 @@
+---
+# tasks file for frappe-bench
+- name: Install frappe-bench
+  ansible.builtin.pip:
+    name: frappe-bench
+    state: present
+
+- name: Initialize Bench instance
+  ansible.builtin.command: bench init frappe-bench --frappe-branch {{ frappe_branch }}
+  args:
+    chdir: "{{ ansible_env.HOME }}"
+    creates: "{{ ansible_env.HOME }}/frappe-bench"
+  become: true
+  become_user: "{{ ansible_env.USER }}"
+
+- name: Create new site
+  ansible.builtin.command: bench new-site {{ site_name }}
+  args:
+    chdir: "{{ ansible_env.HOME }}/frappe-bench"
+    creates: "{{ ansible_env.HOME }}/frappe-bench/sites/{{ site_name }}"
+
+- name: Add site to hosts
+  ansible.builtin.command: bench --site {{ site_name }} add-to-hosts
+  args:
+    chdir: "{{ ansible_env.HOME }}/frappe-bench"
+    creates: "{{ ansible_env.HOME }}/frappe-bench/sites/{{ site_name }}"
+
+- name: Get ERPNext app
+  ansible.builtin.command: bench get-app erpnext --branch {{ frappe_branch }}
+  args:
+    chdir: "{{ ansible_env.HOME }}/frappe-bench"
+    creates: "{{ ansible_env.HOME }}/frappe-bench/apps/erpnext"
+
+- name: Install ERPNext app
+  ansible.builtin.command: bench --site {{ site_name }} install-app erpnext
+  args:
+    chdir: "{{ ansible_env.HOME }}/frappe-bench"
+    creates: "{{ ansible_env.HOME }}/frappe-bench/sites/{{ site_name }}/apps/erpnext"
+
+- name: Get HRMS app
+  ansible.builtin.command: bench get-app hrms --branch {{ frappe_branch }}
+  args:
+    chdir: "{{ ansible_env.HOME }}/frappe-bench"
+    creates: "{{ ansible_env.HOME }}/frappe-bench/apps/hrms"
+
+- name: Install HRMS app
+  ansible.builtin.command: bench --site {{ site_name }} install-app hrms
+  args:
+    chdir: "{{ ansible_env.HOME }}/frappe-bench"
+    creates: "{{ ansible_env.HOME }}/frappe-bench/sites/{{ site_name }}/apps/hrms"
+
+- name: Get Payments app
+  ansible.builtin.command: bench get-app payments --branch {{ frappe_branch }}
+  args:
+    chdir: "{{ ansible_env.HOME }}/frappe-bench"
+    creates: "{{ ansible_env.HOME }}/frappe-bench/apps/payments"
+
+- name: Install Payments app
+  ansible.builtin.command: bench --site {{ site_name }} install-app payments
+  args:
+    chdir: "{{ ansible_env.HOME }}/frappe-bench"
+    creates: "{{ ansible_env.HOME }}/frappe-bench/sites/{{ site_name }}/apps/payments"
+
+- name: Start Bench
+  ansible.builtin.command: bench start
+  args:
+    chdir: "{{ ansible_env.HOME }}/frappe-bench"
+  register: bench_start_output
+
+- name: Display Bench start output
+  ansible.builtin.debug:
+    var: bench_start_output.stdout

@@ -1,0 +1,4 @@
+# defaults/main.yml
+mariadb_version: "10.6"
+mariadb_repo_setup_url: "https://downloads.mariadb.com/MariaDB/mariadb_repo_setup"
+mariadb_root_password: "123"

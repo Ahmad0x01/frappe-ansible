@@ -1,0 +1,38 @@
+---
+- name: Deb | fail if no version match
+  ansible.builtin.fail:
+    msg: |-
+      No version match your `nodejs_version` variable.
+  when: not _nodejs_deb_list
+
+- name: Deb | fail if multiple version match
+  ansible.builtin.fail:
+    msg: >-
+      Multiple version match your `nodejs_version` variable.
+      Select one from:
+      [{%- for nodejs_deb_ in _nodejs_deb_list -%}
+      {{ nodejs_deb_[7:] | replace("_" + _nodesjs_platform_architecture[ansible_architecture] + ".deb", '') }}{% if not loop.last %}, {% endif -%}
+      {% endfor -%}
+      ]
+  when: _nodejs_deb_list | length > 1
+
+- name: Deb | /var/cache/ansible-role-nodejs/
+  ansible.builtin.file:
+    path: /var/cache/ansible-role-nodejs
+    state: directory
+    mode: 0755
+
+- name: "Deb | download  https://deb.nodesource.com/node_{{ _nodejs_version_short }}.x/{{ _nodejs_file_downloading_path }}"     # noqa name[template]
+  ansible.builtin.get_url:
+    url: "https://deb.nodesource.com/node_{{ _nodejs_version_short }}.x/{{ _nodejs_file_downloading_path }}"
+    dest: /var/cache/ansible-role-nodejs/{{ _nodejs_file_deb_name }}
+    use_proxy: true
+    mode: 0644
+  environment:
+    http_proxy: "{{ nodejs_proxy_settings_http_proxy }}"
+    https_proxy: "{{ nodejs_proxy_settings_https_proxy }}"
+
+- name: Deb | install nodejs
+  ansible.builtin.apt:
+    deb: /var/cache/ansible-role-nodejs/{{ _nodejs_file_deb_name }}
+    force: "{{ nodejs_force_install }}"

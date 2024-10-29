@@ -1,0 +1,13 @@
+---
+- name: Converge
+  hosts: all
+  gather_facts: true
+
+  tasks:
+    - name: Update apt cache (on ubuntu).
+      ansible.builtin.apt:
+        update_cache: true
+        cache_valid_time: 3600
+
+- name: Import site playbook
+  ansible.builtin.import_playbook: ../../playbooks/site.yml

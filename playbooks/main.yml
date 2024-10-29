@@ -1,0 +1,22 @@
+---
+- name: Frappe and ERPNext Full Setup
+  hosts: all
+  become: true
+
+  vars:
+    ansible_roles_path: "/home/ahmad/frappe-ansible/roles:/etc/ansible/roles"
+
+  tasks:
+    # idempotent task to create a new user and add it to the sudo group
+    - name: Create a new user
+      ansible.builtin.user:
+        name: mashedbytes
+        state: present
+        groups: sudo
+        append: true
+        shell: /bin/bash
+        password: "mashedbytes"
+        update_password: on_create
+
+- name: Import site playbook
+  import_playbook: site.yml

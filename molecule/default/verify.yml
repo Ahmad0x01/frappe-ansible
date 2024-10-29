@@ -1,0 +1,17 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Check if MariaDB service is running
+      ansible.builtin.systemd:
+        name: mariadb
+        state: started
+
+    - name: Check MariaDB version
+      ansible.builtin.command: mysql --version
+      register: mariadb_version
+
+    - name: Display MariaDB version
+      ansible.builtin.debug:
+        msg: "MariaDB version: {{ mariadb_version.stdout }}"

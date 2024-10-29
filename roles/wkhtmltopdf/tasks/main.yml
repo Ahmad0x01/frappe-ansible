@@ -1,0 +1,20 @@
+---
+- name: Install wkhtmltopdf dependencies
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - xvfb
+    - libfontconfig
+  become: true
+
+- name: Download wkhtmltopdf package
+  ansible.builtin.get_url:
+    url: "{{ wkhtmltopdf_package_url }}"
+    dest: /tmp/wkhtmltox_0.12.6.1-2.jammy_amd64.deb
+    mode: '0644'
+
+- name: Install wkhtmltopdf package
+  ansible.builtin.apt:
+    deb: /tmp/wkhtmltox_0.12.6.1-2.jammy_amd64.deb
+  become: true
